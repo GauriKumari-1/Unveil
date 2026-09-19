@@ -1,0 +1,6 @@
+timestamp,user,host,url,action,file
+2026-09-18T10:03:12,rsharma,WORKSTATION-07,https://intranet.corp.local/dashboard,open,
+2026-09-18T13:02:55,rsharma,WORKSTATION-07,https://news.ycombinator.com,open,
+2026-09-18T14:26:31,rsharma,WORKSTATION-07,https://mail.google.com/mail/u/0,open,
+2026-09-18T14:29:47,rsharma,WORKSTATION-07,https://mail.google.com/mail/u/0/#compose,upload,Confidential_Roadmap.pdf
+2026-09-18T15:10:02,rsharma,WORKSTATION-07,https://drive.google.com/drive/my-drive,open,

@@ -1,0 +1,6 @@
+timestamp,user,host,file,action,hash
+2026-09-18T09:02:11,rsharma,WORKSTATION-07,Weekly_Standup_Notes.docx,open,2b3c4d5e6f708192a3b4c5d6e7f80912a3b4c5d6e7f80912a3b4c5d6e7f8091
+2026-09-18T09:15:44,rsharma,WORKSTATION-07,Team_Calendar.xlsx,open,9f8e7d6c5b4a39281f0e1d2c3b4a59687f6e5d4c3b2a19087f6e5d4c3b2a1908
+2026-09-18T14:14:02,rsharma,WORKSTATION-07,Confidential_Roadmap.pdf,open,a84f7c2e9d13f3568e8c4472b6aa11ffdeadbeefcafefeed0011223344556677
+2026-09-18T14:16:19,rsharma,WORKSTATION-07,Confidential_Roadmap.pdf,copy,a84f7c2e9d13f3568e8c4472b6aa11ffdeadbeefcafefeed0011223344556677
+2026-09-18T16:40:05,rsharma,WORKSTATION-07,Expense_Report_Q3.xlsx,open,1a2b3c4d5e6f70819293a4b5c6d7e8f901a2b3c4d5e6f70819293a4b5c6d7e8

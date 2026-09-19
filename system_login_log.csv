@@ -1,0 +1,5 @@
+timestamp,user,host,action,ip
+2026-09-18T08:58:03,rsharma,WORKSTATION-07,success,10.20.30.41
+2026-09-18T21:59:10,unknown,GATEWAY-01,fail,203.0.113.42
+2026-09-18T22:01:40,unknown,GATEWAY-01,fail,203.0.113.42
+2026-09-18T22:03:12,svc_acct,GATEWAY-01,success,203.0.113.42

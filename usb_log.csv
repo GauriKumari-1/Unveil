@@ -1,0 +1,5 @@
+timestamp,user,host,device,action,serial
+2026-09-15T11:05:00,rsharma,WORKSTATION-07,Generic Flash Drive,connect,SN-1002834
+2026-09-15T11:22:00,rsharma,WORKSTATION-07,Generic Flash Drive,disconnect,SN-1002834
+2026-09-18T14:20:47,rsharma,WORKSTATION-07,SanDisk Ultra 32GB,connect,SN-4487213
+2026-09-18T14:38:02,rsharma,WORKSTATION-07,SanDisk Ultra 32GB,disconnect,SN-4487213
