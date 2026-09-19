@@ -1,0 +1,2437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cyber Triage - Digital Forensics</title>
+
+<style>
+
+/* ===============================
+   GLOBAL
+================================ */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:#080a0c;
+    color:#f2f4f4;
+    font-family:Arial, sans-serif;
+}
+
+button,
+input,
+select{
+    font-family:monospace;
+}
+
+button{
+    cursor:pointer;
+}
+
+
+/* ===============================
+   HEADER
+================================ */
+
+header{
+    height:75px;
+    background:#090b0d;
+    border-bottom:1px solid #292d31;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 4%;
+
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.brand-line{
+    width:5px;
+    height:40px;
+    background:#ff4b19;
+    box-shadow:0 0 15px #ff4b19;
+}
+
+.brand h1{
+    font-size:18px;
+    letter-spacing:2px;
+}
+
+.brand p{
+    font-size:9px;
+    color:#737b80;
+    letter-spacing:2px;
+    margin-top:4px;
+}
+
+nav{
+    display:flex;
+    height:100%;
+}
+
+nav button{
+    background:none;
+    border:none;
+    color:#777f84;
+
+    padding:0 17px;
+
+    font-size:11px;
+    letter-spacing:1px;
+
+    position:relative;
+}
+
+nav button:hover{
+    color:white;
+}
+
+nav button.active{
+    color:white;
+}
+
+nav button.active::after{
+    content:"";
+
+    position:absolute;
+
+    bottom:0;
+    left:15px;
+    right:15px;
+
+    height:3px;
+
+    background:#ff4b19;
+
+    box-shadow:0 0 10px #ff4b19;
+}
+
+.demo{
+    color:#777;
+    font-size:10px;
+    display:flex;
+    align-items:center;
+}
+
+.demo-dot{
+    display:inline-block;
+
+    width:7px;
+    height:7px;
+
+    border-radius:50%;
+
+    background:#ff4b19;
+
+    margin-right:6px;
+
+    box-shadow:0 0 8px #ff4b19;
+}
+
+.demo-dot.live{
+    background:#57d58a;
+    box-shadow:0 0 8px #57d58a;
+}
+
+
+/* ===============================
+   MAIN
+================================ */
+
+main{
+    max-width:1450px;
+    margin:auto;
+    padding:40px 4% 70px;
+}
+
+.status-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:20px;
+    align-items:center;
+
+    font-family:monospace;
+    font-size:10px;
+
+    margin-bottom:25px;
+}
+
+.status-row b{
+    color:#ff4b19;
+}
+
+.demo-badge{
+    border:1px solid #533021;
+    padding:5px 9px;
+    color:#ff6a2b;
+    background:#21140e;
+}
+
+.demo-badge.live{
+    border-color:#285337;
+    color:#57d58a;
+    background:#0e1a13;
+}
+
+
+/* ===============================
+   HERO
+================================ */
+
+.hero{
+    display:grid;
+    grid-template-columns:1fr 360px;
+    gap:35px;
+    align-items:end;
+}
+
+.hero h2{
+    font-size:clamp(55px,8vw,105px);
+    line-height:.82;
+    letter-spacing:-5px;
+}
+
+.hero h2 span{
+    color:#ff4b19;
+}
+
+.tagline{
+    margin:25px 0;
+
+    color:#aeb4b7;
+
+    font-family:monospace;
+    font-size:14px;
+}
+
+.actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+}
+
+.btn{
+    padding:13px 20px;
+
+    border:1px solid #343a3e;
+
+    background:#0e1215;
+    color:white;
+
+    font-family:monospace;
+    font-size:11px;
+    font-weight:bold;
+
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+}
+
+.btn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+    transform:none;
+}
+
+.btn.primary{
+    background:#ff4b19;
+    border-color:#ff4b19;
+}
+
+.btn.ghost{
+    background:transparent;
+}
+
+
+/* ===============================
+   CASE CARD
+================================ */
+
+.case-card{
+    background:#101417;
+    border:1px solid #292f33;
+    padding:20px;
+}
+
+.case-label{
+    color:#727c81;
+    font:10px monospace;
+    letter-spacing:1px;
+}
+
+.case-id{
+    font-size:27px;
+    margin:10px 0 20px;
+    word-break:break-all;
+}
+
+.case-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:17px;
+}
+
+.case-grid small{
+    display:block;
+    color:#697378;
+    font:9px monospace;
+    margin-bottom:5px;
+}
+
+.case-grid strong{
+    font-size:17px;
+}
+
+.orange{
+    color:#ff4b19;
+}
+
+.red{
+    color:#ff5353;
+}
+
+.green{
+    color:#57d58a;
+}
+
+
+/* ===============================
+   STATS
+================================ */
+
+.stats{
+    margin-top:40px;
+
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+
+    border:1px solid #292f33;
+}
+
+.stat{
+    padding:20px 24px;
+
+    border-right:1px solid #292f33;
+}
+
+.stat:last-child{
+    border-right:none;
+}
+
+.stat label{
+    color:#737d82;
+    font:10px monospace;
+    letter-spacing:1px;
+}
+
+.stat-number{
+    font-size:34px;
+    font-weight:bold;
+    margin:7px 0;
+}
+
+.stat em{
+    color:#ff4b19;
+    font:9px monospace;
+    font-style:normal;
+}
+
+
+/* ===============================
+   SECTIONS
+================================ */
+
+.section{
+    margin-top:45px;
+}
+
+.section-title{
+    font:bold 13px monospace;
+    letter-spacing:1px;
+}
+
+.section-title::before{
+    content:"";
+
+    display:inline-block;
+
+    width:4px;
+    height:18px;
+
+    background:#ff4b19;
+
+    margin-right:10px;
+
+    vertical-align:-4px;
+}
+
+.section-sub{
+    color:#717b80;
+    font:10px monospace;
+    margin:7px 0 16px 15px;
+}
+
+
+/* ===============================
+   WORKFLOW
+================================ */
+
+.workflow{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+
+    border:1px solid #292f33;
+}
+
+.step{
+    padding:18px;
+
+    border-right:1px solid #292f33;
+
+    color:#727b80;
+
+    font:10px monospace;
+
+    position:relative;
+}
+
+.step:last-child{
+    border-right:none;
+}
+
+.step span{
+    display:block;
+    color:#aeb4b7;
+    margin-bottom:8px;
+}
+
+.step.active{
+    background:#24130d;
+    color:white;
+}
+
+.step.active span{
+    color:#ff4b19;
+}
+
+.step.done{
+    color:#57d58a;
+}
+
+.step.done span{
+    color:#57d58a;
+}
+
+.step::after{
+    content:"→";
+
+    position:absolute;
+
+    right:8px;
+    top:18px;
+
+    color:#444;
+}
+
+.step:last-child::after{
+    display:none;
+}
+
+
+/* ===============================
+   TWO COLUMN
+================================ */
+
+.two-column{
+    display:grid;
+
+    grid-template-columns:minmax(0,1.65fr) minmax(300px,.75fr);
+
+    gap:20px;
+}
+
+.panel{
+    border:1px solid #292f33;
+    background:#0d1113;
+}
+
+.panel-header{
+    padding:18px;
+    border-bottom:1px solid #292f33;
+}
+
+.panel-header h3{
+    font-size:13px;
+}
+
+.panel-header p{
+    color:#707a7f;
+    font:9px monospace;
+    margin-top:5px;
+}
+
+
+/* ===============================
+   SEARCH
+================================ */
+
+.controls{
+    display:flex;
+    gap:8px;
+    margin-bottom:15px;
+}
+
+.search,
+.filter{
+    background:#090c0e;
+
+    border:1px solid #292f33;
+
+    color:white;
+
+    padding:10px 12px;
+
+    font:10px monospace;
+
+    outline:none;
+}
+
+.search{
+    width:230px;
+}
+
+.search:focus,
+.filter:focus{
+    border-color:#ff4b19;
+}
+
+
+/* ===============================
+   TIMELINE TABLE
+================================ */
+
+.table-container{
+    overflow:auto;
+    max-height:520px;
+}
+
+table{
+    width:100%;
+    min-width:750px;
+    border-collapse:collapse;
+}
+
+th{
+    padding:13px;
+    text-align:left;
+
+    color:#687277;
+
+    border-bottom:1px solid #292f33;
+
+    font:9px monospace;
+
+    position:sticky;
+    top:0;
+    background:#0d1113;
+}
+
+td{
+    padding:14px;
+
+    color:#c7ccce;
+
+    border-bottom:1px solid #1b2024;
+
+    font:10px monospace;
+}
+
+tr:hover{
+    background:#111518;
+}
+
+tr.flagged{
+    background:#1a1210;
+}
+
+.event-id{
+    color:#ff4b19;
+}
+
+.event-source{
+    color:#899398;
+}
+
+.event-name{
+    color:white;
+}
+
+.empty-row td{
+    text-align:center;
+    color:#566065;
+    padding:30px;
+}
+
+
+/* ===============================
+   ALERTS
+================================ */
+
+.alert{
+    padding:17px 18px;
+    border-bottom:1px solid #292f33;
+    cursor:pointer;
+    transition:.15s;
+}
+
+.alert:hover{
+    background:#12161a;
+}
+
+.alert:last-child{
+    border-bottom:none;
+}
+
+.alert-top{
+    display:flex;
+    justify-content:space-between;
+
+    color:#6d777c;
+
+    font:9px monospace;
+}
+
+.alert h4{
+    margin:10px 0 6px;
+    font-size:14px;
+}
+
+.alert p{
+    color:#7d878c;
+    font:10px/1.5 monospace;
+}
+
+.alert .score-line{
+    margin-top:8px;
+    color:#8a9499;
+    font:9px monospace;
+}
+
+.severity{
+    padding:3px 6px;
+    border:1px solid;
+}
+
+.critical{
+    color:#ff5353;
+    border-color:#7a1f1f;
+    background:#210b0b;
+}
+
+.high{
+    color:#ff5353;
+    border-color:#633131;
+}
+
+.medium{
+    color:#e9bd45;
+    border-color:#5c4c22;
+}
+
+.low{
+    color:#57d58a;
+    border-color:#285337;
+}
+
+
+/* ===============================
+   IOC
+================================ */
+
+.ioc-list{
+    padding:5px 18px;
+}
+
+.ioc{
+    display:grid;
+
+    grid-template-columns:80px 1fr 90px;
+
+    gap:15px;
+
+    padding:15px 0;
+
+    border-bottom:1px solid #292f33;
+
+    align-items:center;
+}
+
+.ioc:last-child{
+    border-bottom:none;
+}
+
+.ioc-type{
+    color:#ff4b19;
+    font:9px monospace;
+}
+
+.ioc-value{
+    color:#c7ccce;
+    font:10px monospace;
+
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+.ioc-source{
+    color:#687277;
+    text-align:right;
+    font:9px monospace;
+}
+
+.copy-btn{
+    background:none;
+    border:none;
+
+    color:#687277;
+
+    font:9px monospace;
+
+    margin-left:8px;
+}
+
+.copy-btn:hover{
+    color:white;
+}
+
+
+/* ===============================
+   EVIDENCE + ANALYSIS
+================================ */
+
+.bottom-grid{
+    display:grid;
+
+    grid-template-columns:1.2fr .8fr;
+
+    gap:20px;
+}
+
+.evidence-grid{
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:10px;
+
+    padding:14px;
+}
+
+.evidence-card{
+    min-height:150px;
+
+    border:1px solid #292f33;
+
+    background:#0b0f11;
+
+    padding:16px;
+
+    cursor:pointer;
+
+    position:relative;
+
+    transition:.2s;
+}
+
+.evidence-card:hover{
+    border-color:#703621;
+    transform:translateY(-2px);
+}
+
+.evidence-id{
+    color:#ff4b19;
+    font:9px monospace;
+}
+
+.evidence-type{
+    color:#818b90;
+    font:9px monospace;
+    margin-top:14px;
+}
+
+.evidence-card h4{
+    font-size:12px;
+    line-height:1.4;
+    margin:8px 0 15px;
+    word-break:break-all;
+}
+
+.hash{
+    color:#566065;
+    font:8px monospace;
+}
+
+.open-icon{
+    position:absolute;
+    right:10px;
+    top:10px;
+
+    color:#687277;
+
+    font-size:16px;
+}
+
+
+/* ===============================
+   ANALYSIS
+================================ */
+
+.analysis{
+    padding:20px;
+}
+
+.analysis-id{
+    font-size:24px;
+    font-weight:bold;
+    word-break:break-all;
+}
+
+.analysis-grid{
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:20px;
+
+    margin-top:24px;
+}
+
+.analysis-item small{
+    display:block;
+
+    color:#687277;
+
+    font:9px monospace;
+}
+
+.analysis-item strong{
+    display:block;
+
+    margin-top:5px;
+
+    font-size:17px;
+}
+
+
+/* ===============================
+   UPLOAD
+================================ */
+
+.upload-row{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    flex-wrap:wrap;
+    margin-top:16px;
+}
+
+.file-label{
+    padding:13px 20px;
+    border:1px dashed #343a3e;
+    background:#0e1215;
+    color:#aeb4b7;
+    font:11px monospace;
+}
+
+#zipInput{
+    display:none;
+}
+
+.file-name{
+    color:#57d58a;
+    font:10px monospace;
+}
+
+
+/* ===============================
+   FOOTER
+================================ */
+
+footer{
+    margin-top:50px;
+
+    padding-top:18px;
+
+    border-top:1px solid #292f33;
+
+    display:flex;
+    justify-content:space-between;
+
+    color:#566065;
+
+    font:9px monospace;
+}
+
+
+/* ===============================
+   MODAL
+================================ */
+
+.modal{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.8);
+
+    display:none;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+
+    z-index:500;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+
+    width:min(640px,100%);
+    max-height:80vh;
+    overflow:auto;
+
+    background:#0d1113;
+
+    border:1px solid #5b3223;
+
+    padding:25px;
+
+    box-shadow:0 20px 80px black;
+}
+
+.modal-box h3{
+    margin-bottom:15px;
+}
+
+.modal-box p{
+    color:#899398;
+    font:11px/1.7 monospace;
+    white-space:pre-wrap;
+}
+
+.close-modal{
+
+    float:right;
+
+    background:none;
+
+    border:none;
+
+    color:#888;
+
+    font-size:25px;
+}
+
+
+/* ===============================
+   TOAST
+================================ */
+
+.toast{
+
+    position:fixed;
+
+    bottom:20px;
+
+    right:20px;
+
+    background:#151a1d;
+
+    border:1px solid #394146;
+
+    padding:12px 17px;
+
+    font:10px monospace;
+
+    display:none;
+
+    z-index:600;
+}
+
+.toast.show{
+    display:block;
+}
+
+
+/* ===============================
+   RESPONSIVE
+================================ */
+
+@media(max-width:1000px){
+
+    .hero,
+    .two-column,
+    .bottom-grid{
+        grid-template-columns:1fr;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    nav button{
+        padding:0 9px;
+    }
+
+    .workflow{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+}
+
+
+@media(max-width:650px){
+
+    header{
+        padding:0 12px;
+    }
+
+    .brand p,
+    .demo{
+        display:none;
+    }
+
+    nav button{
+        padding:0 5px;
+        font-size:8px;
+    }
+
+    nav button.active::after{
+        left:4px;
+        right:4px;
+    }
+
+    main{
+        padding:30px 15px;
+    }
+
+    .hero h2{
+        font-size:58px;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .stat{
+        border-right:none;
+        border-bottom:1px solid #292f33;
+    }
+
+    .workflow{
+        grid-template-columns:1fr;
+    }
+
+    .step{
+        border-right:none;
+        border-bottom:1px solid #292f33;
+    }
+
+    .step::after{
+        display:none;
+    }
+
+    .controls{
+        flex-direction:column;
+    }
+
+    .search{
+        width:100%;
+    }
+
+    .evidence-grid{
+        grid-template-columns:1fr;
+    }
+
+    .ioc{
+        grid-template-columns:60px 1fr;
+    }
+
+    .ioc-source{
+        display:none;
+    }
+
+    footer{
+        flex-direction:column;
+        gap:8px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+====================================================== -->
+
+<header>
+
+    <div class="brand">
+
+        <div class="brand-line"></div>
+
+        <div>
+
+            <h1>CYBER TRIAGE</h1>
+
+            <p>DIGITAL FORENSICS DIVISION</p>
+
+        </div>
+
+    </div>
+
+
+    <nav>
+
+        <button class="active" data-target="dashboard">
+            DASHBOARD
+        </button>
+
+        <button data-target="timeline">
+            TIMELINE
+        </button>
+
+        <button data-target="alerts">
+            ALERTS
+        </button>
+
+        <button data-target="iocs">
+            IOCs
+        </button>
+
+        <button data-target="evidence">
+            EVIDENCE
+        </button>
+
+    </nav>
+
+
+    <div class="demo">
+
+        <span class="demo-dot" id="connDot"></span>
+
+        <span id="connLabel">CONNECTING...</span>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     MAIN
+====================================================== -->
+
+<main>
+
+
+<!-- =====================================================
+     DASHBOARD
+====================================================== -->
+
+<section id="dashboard">
+
+
+    <div class="status-row">
+
+        <b>CASE STATUS: <span id="caseStatus">ACTIVE</span></b>
+
+        <span>
+            INVESTIGATION MODE: DIGITAL FORENSICS
+        </span>
+
+        <span class="demo-badge" id="dataBadge">
+            ■ LOADING...
+        </span>
+
+    </div>
+
+
+
+    <!-- HERO -->
+
+    <div class="hero">
+
+
+        <div>
+
+            <h2>
+
+                CYBER
+
+                <br>
+
+                <span>TRIAGE</span>
+
+            </h2>
+
+
+            <div class="tagline">
+
+                Collect · Correlate · Investigate
+
+            </div>
+
+
+            <div class="actions">
+
+                <button
+                    class="btn primary"
+                    id="loadDemoBtn">
+
+                    LOAD DEMO CASE →
+
+                </button>
+
+
+                <button
+                    class="btn"
+                    id="refreshBtn">
+
+                    REFRESH
+
+                </button>
+
+
+                <button
+                    class="btn ghost"
+                    id="exportReport">
+
+                    EXPORT REPORT
+
+                </button>
+
+            </div>
+
+
+            <div class="upload-row">
+
+                <label class="file-label" for="zipInput">
+                    ⬆ UPLOAD EVIDENCE ZIP
+                </label>
+
+                <input type="file" id="zipInput" accept=".zip">
+
+                <span class="file-name" id="fileName"></span>
+
+                <button class="btn primary" id="analyzeBtn" disabled>
+                    ANALYZE
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- CASE CARD -->
+
+        <div class="case-card">
+
+            <div class="case-label">
+
+                ACTIVE INVESTIGATION
+
+            </div>
+
+
+            <div class="case-id" id="caseIdLabel">
+
+                NO CASE LOADED
+
+            </div>
+
+
+            <div class="case-grid">
+
+
+                <div>
+
+                    <small>
+                        EVIDENCE INTEGRITY
+                    </small>
+
+                    <strong class="orange" id="integrityLabel">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <small>
+                        CASE STATUS
+                    </small>
+
+                    <strong id="statusLabel">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <small>
+                        EVENTS EXTRACTED
+                    </small>
+
+                    <strong id="eventsLabel">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <small>
+                        HIGHEST SEVERITY
+                    </small>
+
+                    <strong id="severityLabel">
+                        —
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- STATS -->
+
+    <div class="stats">
+
+
+        <div class="stat">
+
+            <label>
+                EVIDENCE FILES
+            </label>
+
+            <div class="stat-number" id="statFiles">
+                0
+            </div>
+
+            <em id="statFilesSub">
+                ● —
+            </em>
+
+        </div>
+
+
+        <div class="stat">
+
+            <label>
+                EVENTS EXTRACTED
+            </label>
+
+            <div class="stat-number" id="statEvents">
+                0
+            </div>
+
+            <em>
+                ● NORMALIZED
+            </em>
+
+        </div>
+
+
+        <div class="stat">
+
+            <label>
+                ALERTS
+            </label>
+
+            <div class="stat-number" id="statAlerts">
+                0
+            </div>
+
+            <em>
+                ● CORRELATED
+            </em>
+
+        </div>
+
+
+        <div class="stat">
+
+            <label>
+                IOCs EXTRACTED
+            </label>
+
+            <div class="stat-number" id="statIocs">
+                0
+            </div>
+
+            <em>
+                ● REVIEW
+            </em>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- WORKFLOW -->
+
+    <div class="section">
+
+        <div class="section-title">
+            INVESTIGATION WORKFLOW
+        </div>
+
+        <div class="section-sub">
+            Evidence → Acquire → Classify → Extract → Normalize → Correlate → Investigate
+        </div>
+
+
+        <div class="workflow" id="workflowSteps">
+
+
+            <div class="step" data-step="acquire">
+
+                <span>01</span>
+
+                ACQUIRE
+
+            </div>
+
+
+            <div class="step" data-step="classify">
+
+                <span>02</span>
+
+                CLASSIFY
+
+            </div>
+
+
+            <div class="step" data-step="extract">
+
+                <span>03</span>
+
+                EXTRACT
+
+            </div>
+
+
+            <div class="step" data-step="normalize">
+
+                <span>04</span>
+
+                NORMALIZE
+
+            </div>
+
+
+            <div class="step" data-step="correlate">
+
+                <span>05</span>
+
+                CORRELATE
+
+            </div>
+
+
+            <div class="step" data-step="investigate">
+
+                <span>06</span>
+
+                INVESTIGATE
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     TIMELINE
+====================================================== -->
+
+<section
+    class="section"
+    id="timeline">
+
+
+    <div class="section-title">
+        EVENT TIMELINE
+    </div>
+
+    <div class="section-sub">
+        Chronological reconstruction of digital activity
+    </div>
+
+
+    <div class="controls">
+
+        <input
+            type="text"
+            id="searchEvents"
+            class="search"
+            placeholder="SEARCH EVENTS...">
+
+
+        <select
+            id="sourceFilter"
+            class="filter">
+
+            <option value="all">
+                ALL SOURCES
+            </option>
+
+            <option value="login">
+                LOGIN
+            </option>
+
+            <option value="file_access">
+                FILE_ACCESS
+            </option>
+
+            <option value="usb">
+                USB
+            </option>
+
+            <option value="browser">
+                BROWSER
+            </option>
+
+        </select>
+
+    </div>
+
+
+
+    <div class="two-column">
+
+
+        <!-- EVENT TABLE -->
+
+        <div class="panel">
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>EVENT ID</th>
+
+                            <th>TIMESTAMP</th>
+
+                            <th>SOURCE</th>
+
+                            <th>EVENT TYPE</th>
+
+                            <th>USER</th>
+
+                            <th>HOST</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="eventTable">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ALERTS -->
+
+        <div
+            class="panel"
+            id="alerts">
+
+
+            <div class="panel-header">
+
+                <h3>
+                    ACTIVE ALERTS
+                </h3>
+
+                <p>
+                    Flagged chains requiring investigation — click to drill down
+                </p>
+
+            </div>
+
+
+            <div id="alertContainer">
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     IOC
+====================================================== -->
+
+<section
+    class="section"
+    id="iocs">
+
+
+    <div class="section-title">
+        INDICATORS OF COMPROMISE
+    </div>
+
+    <div class="section-sub">
+        Extracted artifacts requiring review
+    </div>
+
+
+    <div class="panel">
+
+        <div
+            class="ioc-list"
+            id="iocContainer">
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     EVIDENCE
+====================================================== -->
+
+<section
+    class="section"
+    id="evidence">
+
+
+    <div class="section-title">
+        EVIDENCE REGISTRY
+    </div>
+
+    <div class="section-sub">
+        Chain-of-custody documentation
+    </div>
+
+
+    <div class="bottom-grid">
+
+
+        <!-- EVIDENCE -->
+
+        <div class="panel">
+
+            <div
+                class="evidence-grid"
+                id="evidenceContainer">
+
+            </div>
+
+        </div>
+
+
+
+        <!-- CASE ANALYSIS -->
+
+        <div class="panel">
+
+
+            <div class="panel-header">
+
+                <h3>
+                    CASE ANALYSIS
+                </h3>
+
+                <p>
+                    Forensic metrics and case integrity
+                </p>
+
+            </div>
+
+
+            <div class="analysis">
+
+
+                <div class="analysis-id" id="analysisCaseId">
+
+                    NO CASE LOADED
+
+                </div>
+
+
+                <div class="analysis-grid">
+
+
+                    <div class="analysis-item">
+
+                        <small>
+                            EVIDENCE INTEGRITY
+                        </small>
+
+                        <strong class="orange">
+                            VERIFIED
+                        </strong>
+
+                    </div>
+
+
+                    <div class="analysis-item">
+
+                        <small>
+                            EVENTS CORRELATED
+                        </small>
+
+                        <strong id="analysisEvents">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="analysis-item">
+
+                        <small>
+                            ALERTS GENERATED
+                        </small>
+
+                        <strong id="analysisAlerts">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="analysis-item">
+
+                        <small>
+                            IOCs EXTRACTED
+                        </small>
+
+                        <strong id="analysisIocs">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="analysis-item">
+
+                        <small>
+                            CASE STATUS
+                        </small>
+
+                        <strong class="red" id="analysisStatus">
+                            ACTIVE
+                        </strong>
+
+                    </div>
+
+
+                    <div class="analysis-item">
+
+                        <small>
+                            CONFIDENCE
+                        </small>
+
+                        <strong id="analysisConfidence">
+                            —
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     FOOTER
+====================================================== -->
+
+<footer>
+
+    <span>
+        CYBER TRIAGE / DIGITAL FORENSICS DIVISION
+    </span>
+
+    <span id="footerStatus">
+        LIVE BACKEND · SIH1744
+    </span>
+
+</footer>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     ALERT / EVIDENCE MODAL
+====================================================== -->
+
+<div
+    class="modal"
+    id="evidenceModal">
+
+
+    <div class="modal-box">
+
+
+        <button
+            class="close-modal"
+            id="closeModal">
+
+            ×
+
+        </button>
+
+
+        <h3 id="modalTitle">
+            Details
+        </h3>
+
+
+        <p id="modalText">
+        </p>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- TOAST -->
+
+<div
+    class="toast"
+    id="toast">
+
+    Copied
+
+</div>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT — wired to the live FastAPI backend
+====================================================== -->
+
+<script>
+
+const API = ""; // same-origin: backend serves this page too
+
+let currentCaseId = null;
+let state = {
+    events: [],
+    alerts: [],
+    iocs: [],
+    files: [],
+    summary: {}
+};
+
+
+/* ==========================================
+   FETCH HELPER
+========================================== */
+
+async function api(path, options){
+    const res = await fetch(API + path, options);
+    if(!res.ok){
+        let detail = res.statusText;
+        try{
+            const body = await res.json();
+            detail = body.detail || detail;
+        }catch(e){}
+        throw new Error(detail);
+    }
+    return res.json();
+}
+
+
+/* ==========================================
+   CONNECTION STATUS
+========================================== */
+
+async function checkConnection(){
+    const dot = document.getElementById("connDot");
+    const label = document.getElementById("connLabel");
+    try{
+        await api("/health");
+        dot.classList.add("live");
+        label.textContent = "BACKEND LIVE";
+        return true;
+    }catch(e){
+        dot.classList.remove("live");
+        label.textContent = "BACKEND OFFLINE";
+        return false;
+    }
+}
+
+
+/* ==========================================
+   LOAD A CASE (demo or uploaded) AND RENDER
+========================================== */
+
+async function loadCase(caseId){
+    setWorkflowStep("acquire");
+    const qs = caseId ? ("?case_id=" + encodeURIComponent(caseId)) : "";
+
+    try{
+        const [summary, timelineData, alertsData, iocsData] = await Promise.all([
+            api("/summary" + qs),
+            api("/timeline" + qs),
+            api("/alerts" + qs),
+            api("/iocs" + qs)
+        ]);
+
+        currentCaseId = summary.case_id;
+        state.summary = summary;
+        state.events = timelineData.events || [];
+        state.alerts = alertsData.alerts || [];
+        state.iocs = iocsData.iocs || [];
+
+        try{
+            const caseDetail = await api("/cases/" + encodeURIComponent(currentCaseId));
+            state.files = caseDetail.files || [];
+        }catch(e){ /* non-fatal */ }
+
+        setWorkflowStep("investigate", true);
+        renderAll();
+
+        if(summary.errors && summary.errors.length){
+            showToast(summary.errors[0]);
+        }
+    }catch(e){
+        showToast("Failed to load case: " + e.message);
+    }
+}
+
+
+function setWorkflowStep(step, allDone){
+    const order = ["acquire","classify","extract","normalize","correlate","investigate"];
+    const steps = document.querySelectorAll("#workflowSteps .step");
+    const targetIndex = order.indexOf(step);
+
+    steps.forEach(function(el){
+        const idx = order.indexOf(el.dataset.step);
+        el.classList.remove("active","done");
+        if(allDone){
+            el.classList.add("done");
+        }else if(idx < targetIndex){
+            el.classList.add("done");
+        }else if(idx === targetIndex){
+            el.classList.add("active");
+        }
+    });
+}
+
+
+/* ==========================================
+   RENDER EVERYTHING FROM STATE
+========================================== */
+
+function renderAll(){
+    const s = state.summary;
+
+    document.getElementById("dataBadge").textContent = "■ LIVE CASE: " + (currentCaseId || "—");
+    document.getElementById("dataBadge").classList.add("live");
+    document.getElementById("caseIdLabel").textContent = currentCaseId || "NO CASE LOADED";
+    document.getElementById("analysisCaseId").textContent = currentCaseId || "NO CASE LOADED";
+
+    document.getElementById("integrityLabel").textContent = (s.errors && s.errors.length) ? "ISSUES FOUND" : "VERIFIED";
+    document.getElementById("statusLabel").textContent = "ACTIVE";
+    document.getElementById("eventsLabel").textContent = s.events_extracted ?? 0;
+    document.getElementById("severityLabel").textContent = s.highest_severity || "—";
+
+    document.getElementById("statFiles").textContent = s.evidence_files ?? 0;
+    document.getElementById("statFilesSub").textContent = "● " + (state.files.length ? state.files.length + " CLASSIFIED" : "FIXED SET");
+    document.getElementById("statEvents").textContent = s.events_extracted ?? 0;
+    document.getElementById("statAlerts").textContent = s.suspicious_chains ?? 0;
+    document.getElementById("statIocs").textContent = s.iocs_found ?? 0;
+
+    document.getElementById("analysisEvents").textContent = s.events_extracted ?? 0;
+    document.getElementById("analysisAlerts").textContent = s.suspicious_chains ?? 0;
+    document.getElementById("analysisIocs").textContent = s.iocs_found ?? 0;
+    document.getElementById("analysisConfidence").textContent = (s.suspicious_chains > 0) ? "HIGH" : "NOMINAL";
+
+    renderEvents();
+    renderAlerts();
+    renderIOCs();
+    renderEvidence();
+}
+
+
+/* ==========================================
+   RENDER EVENTS (timeline table)
+========================================== */
+
+function flaggedEventIds(){
+    const ids = new Set();
+    state.alerts.forEach(function(a){ (a.events || []).forEach(function(id){ ids.add(id); }); });
+    return ids;
+}
+
+function renderEvents(){
+
+    const table = document.getElementById("eventTable");
+    const search = document.getElementById("searchEvents").value.toLowerCase();
+    const filter = document.getElementById("sourceFilter").value;
+    const flagged = flaggedEventIds();
+
+    table.innerHTML = "";
+
+    if(!state.events.length){
+        table.innerHTML = '<tr class="empty-row"><td colspan="6">No events loaded yet — load the demo case or upload evidence.</td></tr>';
+        return;
+    }
+
+    let shown = 0;
+
+    state.events.forEach(function(event){
+
+        const rowText = [event.id, event.timestamp, event.source, event.event_type, event.user, event.host].join(" ").toLowerCase();
+        const matchesSearch = rowText.includes(search);
+        const matchesFilter = filter === "all" || event.source === filter;
+
+        if(matchesSearch && matchesFilter){
+            shown++;
+            const rowClass = flagged.has(event.id) ? "flagged" : "";
+
+            table.innerHTML += `
+                <tr class="${rowClass}">
+                    <td class="event-id">${event.id}</td>
+                    <td>${formatTime(event.timestamp)}</td>
+                    <td class="event-source">${event.source}</td>
+                    <td class="event-name">${event.event_type}</td>
+                    <td>${event.user || "—"}</td>
+                    <td>${event.host || "—"}</td>
+                </tr>
+            `;
+        }
+    });
+
+    if(!shown){
+        table.innerHTML = '<tr class="empty-row"><td colspan="6">No events match this search/filter.</td></tr>';
+    }
+}
+
+function formatTime(ts){
+    if(!ts) return "—";
+    return String(ts).replace("T"," ").replace("Z","").slice(0,19);
+}
+
+
+/* ==========================================
+   RENDER ALERTS
+========================================== */
+
+function renderAlerts(){
+
+    const container = document.getElementById("alertContainer");
+    container.innerHTML = "";
+
+    if(!state.alerts.length){
+        container.innerHTML = '<div class="alert"><p>No correlated alerts for this case — load the demo case or analyze evidence.</p></div>';
+        return;
+    }
+
+    state.alerts.forEach(function(alert, index){
+        container.innerHTML += `
+            <div class="alert" onclick="showAlert(${index})">
+                <div class="alert-top">
+                    <span>${alert.id}</span>
+                    <span class="severity ${(alert.severity || "").toLowerCase()}">${alert.severity}</span>
+                </div>
+                <h4>${alert.type.replace(/_/g," ")}</h4>
+                <p>${alert.reason}</p>
+                <div class="score-line">RISK SCORE: ${alert.score} · EVENTS: ${(alert.events || []).join(", ")}</div>
+            </div>
+        `;
+    });
+}
+
+function showAlert(index){
+    const alert = state.alerts[index];
+    const linkedEvents = state.events.filter(function(e){ return (alert.events || []).includes(e.id); });
+
+    let body = "Severity: " + alert.severity + "\n";
+    body += "Score: " + alert.score + "\n";
+    body += "Reason: " + alert.reason + "\n\n";
+    body += "Score breakdown:\n";
+    (alert.breakdown || []).forEach(function(b){
+        body += "  +" + b.points + "  " + b.reason + "\n";
+    });
+    body += "\nTriggering events:\n";
+    linkedEvents.forEach(function(e){
+        body += "  " + formatTime(e.timestamp) + "  [" + e.source + "]  " + e.event_type + "  (" + e.id + ")\n";
+    });
+
+    document.getElementById("modalTitle").textContent = alert.id + " — " + alert.type.replace(/_/g," ");
+    document.getElementById("modalText").textContent = body;
+    document.getElementById("evidenceModal").classList.add("show");
+
+    // jump to timeline and highlight
+    document.getElementById("sourceFilter").value = "all";
+    document.getElementById("searchEvents").value = "";
+    renderEvents();
+    document.getElementById("timeline").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+
+/* ==========================================
+   RENDER IOCs
+========================================== */
+
+function renderIOCs(){
+
+    const container = document.getElementById("iocContainer");
+    container.innerHTML = "";
+
+    if(!state.iocs.length){
+        container.innerHTML = '<div class="ioc"><div class="ioc-value">No IOCs extracted yet.</div></div>';
+        return;
+    }
+
+    state.iocs.forEach(function(item, index){
+        container.innerHTML += `
+            <div class="ioc">
+                <div class="ioc-type">${item.type}</div>
+                <div class="ioc-value">
+                    ${item.value}
+                    <button class="copy-btn" onclick="copyIOC(${index})">COPY</button>
+                </div>
+                <div class="ioc-source">${item.source_event_id || ""}</div>
+            </div>
+        `;
+    });
+}
+
+function copyIOC(index){
+    const value = state.iocs[index].value;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(value);
+    }
+    showToast("IOC copied to clipboard");
+}
+
+
+/* ==========================================
+   RENDER EVIDENCE REGISTRY
+========================================== */
+
+function renderEvidence(){
+
+    const container = document.getElementById("evidenceContainer");
+    container.innerHTML = "";
+
+    const files = state.files.length ? state.files : (state.summary.evidence_files ? [] : []);
+
+    if(!files.length){
+        container.innerHTML = '<div class="evidence-card"><div class="evidence-type">NO FILES YET</div><h4>Load the demo case or upload an evidence ZIP to populate the registry.</h4></div>';
+        return;
+    }
+
+    files.forEach(function(item, index){
+        container.innerHTML += `
+            <div class="evidence-card" onclick="showEvidence(${index})">
+                <div class="open-icon">↗</div>
+                <div class="evidence-id">EVD-${String(index+1).padStart(3,"0")}</div>
+                <div class="evidence-type">${(item.type || "unsupported").toUpperCase()}</div>
+                <h4>${item.filename}</h4>
+                <div class="hash">CASE: ${currentCaseId || "—"}</div>
+            </div>
+        `;
+    });
+}
+
+function showEvidence(index){
+    const item = state.files[index];
+    document.getElementById("modalTitle").textContent = item.filename;
+    document.getElementById("modalText").textContent =
+        "Type: " + item.type + "\nCase: " + currentCaseId + "\n\nClassified and normalized into the unified event timeline.";
+    document.getElementById("evidenceModal").classList.add("show");
+}
+
+
+/* ==========================================
+   MODAL CLOSE
+========================================== */
+
+document.getElementById("closeModal").addEventListener("click", function(){
+    document.getElementById("evidenceModal").classList.remove("show");
+});
+
+document.getElementById("evidenceModal").addEventListener("click", function(event){
+    if(event.target.id === "evidenceModal"){
+        document.getElementById("evidenceModal").classList.remove("show");
+    }
+});
+
+
+/* ==========================================
+   TOAST
+========================================== */
+
+function showToast(message){
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.classList.add("show");
+    setTimeout(function(){ toast.classList.remove("show"); }, 2200);
+}
+
+
+/* ==========================================
+   NAVIGATION
+========================================== */
+
+document.querySelectorAll("nav button").forEach(function(button){
+    button.addEventListener("click", function(){
+        document.querySelectorAll("nav button").forEach(function(btn){ btn.classList.remove("active"); });
+        this.classList.add("active");
+        document.getElementById(this.dataset.target).scrollIntoView({behavior:"smooth", block:"start"});
+    });
+});
+
+
+/* ==========================================
+   LOAD DEMO CASE BUTTON
+========================================== */
+
+document.getElementById("loadDemoBtn").addEventListener("click", async function(){
+    this.disabled = true;
+    this.textContent = "LOADING...";
+    setWorkflowStep("classify");
+    await loadCase("CASE-DEMO");
+    this.disabled = false;
+    this.textContent = "LOAD DEMO CASE →";
+    showToast("Demo case loaded");
+    document.getElementById("timeline").scrollIntoView({behavior:"smooth", block:"start"});
+});
+
+
+/* ==========================================
+   REFRESH BUTTON
+========================================== */
+
+document.getElementById("refreshBtn").addEventListener("click", async function(){
+    if(!currentCaseId){
+        showToast("Load a case first");
+        return;
+    }
+    await loadCase(currentCaseId);
+    showToast("Case refreshed");
+});
+
+
+/* ==========================================
+   UPLOAD ZIP + ANALYZE
+========================================== */
+
+let pendingFile = null;
+
+document.getElementById("zipInput").addEventListener("change", function(e){
+    pendingFile = e.target.files[0] || null;
+    document.getElementById("fileName").textContent = pendingFile ? pendingFile.name : "";
+    document.getElementById("analyzeBtn").disabled = !pendingFile;
+});
+
+document.getElementById("analyzeBtn").addEventListener("click", async function(){
+    if(!pendingFile) return;
+
+    this.disabled = true;
+    this.textContent = "ANALYZING...";
+    setWorkflowStep("acquire");
+
+    const formData = new FormData();
+    formData.append("file", pendingFile);
+
+    try{
+        const uploadResult = await api("/upload", { method: "POST", body: formData });
+        state.files = uploadResult.files || [];
+        setWorkflowStep("normalize");
+
+        await loadCase(uploadResult.case_id);
+
+        if(uploadResult.errors && uploadResult.errors.length){
+            showToast(uploadResult.errors[0]);
+        }else{
+            showToast("Analysis complete — case " + uploadResult.case_id);
+        }
+
+        document.getElementById("timeline").scrollIntoView({behavior:"smooth", block:"start"});
+    }catch(e){
+        showToast("Upload failed: " + e.message);
+    }
+
+    this.disabled = false;
+    this.textContent = "ANALYZE";
+});
+
+
+/* ==========================================
+   EXPORT REPORT
+========================================== */
+
+document.getElementById("exportReport").addEventListener("click", function(){
+
+    const s = state.summary;
+
+    const report =
+`CYBER TRIAGE REPORT
+
+CASE ID: ${currentCaseId || "N/A"}
+
+EVIDENCE FILES: ${s.evidence_files ?? 0}
+EVENTS EXTRACTED: ${s.events_extracted ?? 0}
+SUSPICIOUS CHAINS: ${s.suspicious_chains ?? 0}
+IOCs EXTRACTED: ${s.iocs_found ?? 0}
+HIGHEST SEVERITY: ${s.highest_severity || "—"}
+
+--------------------------------
+ALERTS
+--------------------------------
+${state.alerts.map(function(a){
+    return a.id + " [" + a.severity + "] " + a.type + "\n  " + a.reason + "\n  events: " + (a.events||[]).join(", ");
+}).join("\n\n")}
+
+--------------------------------
+IOCs
+--------------------------------
+${state.iocs.map(function(i){ return i.type + ": " + i.value; }).join("\n")}
+
+--------------------------------
+CYBER TRIAGE
+DIGITAL FORENSICS DIVISION — SIH1744
+`;
+
+    const blob = new Blob([report], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "cyber-triage-report-" + (currentCaseId || "case") + ".txt";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+
+    showToast("Report exported");
+});
+
+
+/* ==========================================
+   SEARCH / FILTER
+========================================== */
+
+document.getElementById("searchEvents").addEventListener("input", renderEvents);
+document.getElementById("sourceFilter").addEventListener("change", renderEvents);
+
+
+/* ==========================================
+   INITIALIZE
+========================================== */
+
+(async function init(){
+    const ok = await checkConnection();
+    renderAll();
+    if(ok){
+        await loadCase(null); // auto-load the demo case so the dashboard is never empty
+    }
+})();
+
+</script>
+
+
+</body>
+
+</html>
